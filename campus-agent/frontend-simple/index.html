@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>校园智能助手 MVP</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f2f6fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-box {
+      width: 90%;
+      max-width: 500px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    .messages {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+    .msg {
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .user { text-align: right; color: #0066ff; }
+    .bot { text-align: left; color: #333; }
+    .input-area {
+      display: flex;
+      gap: 8px;
+    }
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+    button {
+      background: #0066ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004bcc;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-box">
+    <h2>🎓 校园智能助手 MVP</h2>
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <input id="question" type="text" placeholder="请输入你的问题..." />
+      <button onclick="send()">发送</button>
+    </div>
+  </div>
+
+  <script>
+    const apiUrl = "http://127.0.0.1:8000/api/chat";
+    const messagesDiv = document.getElementById("messages");
+    const input = document.getElementById("question");
+
+    function appendMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.classList.add("msg", sender);
+      msg.textContent = text;
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    async function send() {
+      const question = input.value.trim();
+      if (!question) return;
+      appendMessage("user", "🧑‍🎓 " + question);
+      input.value = "";
+
+      try {
+        const res = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+        const data = await res.json();
+        appendMessage("bot", "🤖 " + data.answer);
+      } catch (e) {
+        appendMessage("bot", "❌ 无法连接到后端，请确认 FastAPI 已运行。");
+      }
+    }
+  </script>
+</body>
+</html>
