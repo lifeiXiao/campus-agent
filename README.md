@@ -43,7 +43,7 @@ pip install -r requirements.txt
 MODELSCOPE_API_TOKEN=你的魔搭令牌
 REMOTE_MODEL=Qwen/Qwen2.5-7B-Instruct
 cd backend
-
+``` 
 ## ⚙️ 启动服务
 uvicorn main:app --reload --port 8000
 
