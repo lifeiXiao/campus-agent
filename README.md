@@ -48,5 +48,5 @@ cd backend
 ## ⚙️ 启动服务
 uvicorn main:app --reload --port 8000
 
-## ⚙️ 访问地址
+## ⚙️ 本地访问地址
 127.0.0.1：8000
